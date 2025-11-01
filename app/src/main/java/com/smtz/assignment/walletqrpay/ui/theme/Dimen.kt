@@ -20,11 +20,18 @@ data class TextSizes(
 object Dimens {
     val MarginSmall = 4.dp
     val MarginMedium = 8.dp
+    val MarginxMedium = 12.dp
     val MarginLarge = 16.dp
+    val MarginxLarge = 20.dp
+    val MarginxxLarge = 24.dp
+    val MarginxxxLarge = 30.dp
+    val MarginxtraLarge = 36.dp
     val TextSmall = 12.sp
+    val TextxSmall = 14.sp
     val TextRegular = 16.sp
     val TextMedium = 18.sp
     val TextLarge = 20.sp
+    val TextxLarge = 22.sp
     val TextHeading = 24.sp
     val TextTitle = 32.sp
 }

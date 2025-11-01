@@ -136,6 +136,8 @@ fun TransferScreen(
 
                         if (amount <= availablePoints) {
                             transferViewModel.transferAmount.value = inputValue
+                        } else {
+                            transferViewModel.transferAmount.value = availablePoints.toString()
                         }
                     },
                     

@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.smtz.assignment.walletqrpay.R
 import com.smtz.assignment.walletqrpay.R.drawable.*
 import com.smtz.assignment.walletqrpay.data.model.TransactionData
 import com.smtz.assignment.walletqrpay.data.model.UserData
@@ -71,7 +72,7 @@ fun HomeScreen() {
                             context.startActivity(intent)
                         },
                         onReceiveClick = {
-                            val intent = QRCodeActivity.newIntent(context, "${userData?.userId}", "${userData?.userName}")
+                            val intent = QRCodeActivity.newIntent(context, "${userData?.userId}", "${userData?.userName}", "${userData?.phone}")
                             context.startActivity(intent)
                         })
                 }
@@ -127,32 +128,77 @@ fun HomeScreen() {
 
 @Composable
 fun HeaderWithBalanceSection(userData: UserData?) {
+    // Both Header and Card height is 270.dp. Header only take 220.dp. Card clips to bottom with height 100.dp. 270 - 220 = 50dp is overlay.
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(270.dp)
+            .height(300.dp)
     ) {
 
-        // Header Background and Title
+        // Header Background
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(220.dp)
+                .height(240.dp)
                 .background(
                     DarkBluePrimary,
                     RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                 )
         ) {
-            Text(
-                text = "Wallet QRPay",
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
+            Column(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .offset(y = (-16).dp)
-            )
+                    .fillMaxSize()
+                    .padding(start = Dimens.MarginxLarge, top = Dimens.MarginxxLarge, end = Dimens.MarginxLarge, bottom = Dimens.MarginLarge),
+                verticalArrangement = Arrangement.Top
+            ) {
+                Spacer(modifier = Modifier.height(Dimens.MarginxxxLarge))
+
+                // App Title
+                Text(
+                    text = "Wallet QRPay",
+                    fontSize = Dimens.TextxLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(Dimens.MarginxxLarge))
+
+                // Circle Avatar + Name & Phone
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.height(50.dp) // same height for circle & text
+                ) {
+                    // Dummy Profile icon
+                    Image(
+                        painter = painterResource(id = ic_avatar), // your drawable
+                        contentDescription = "Profile Image",
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(Dimens.MarginxMedium))
+
+                    // Name & Phone Number
+                    Column(
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = userData?.userName ?: "User Name",
+                            fontSize = Dimens.TextxSmall,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color.White
+                        )
+                        Text(
+                            text = userData?.phone ?: "+959 123 456 789",
+                            fontSize = Dimens.TextxSmall,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.White.copy(alpha = 0.8f)
+                        )
+                    }
+                }
+            }
         }
+
+
 
         // Floating Balance Card
         Card(
@@ -279,7 +325,7 @@ fun TransactionRecordItem(userData: UserData, transactionData: TransactionData) 
                 ) {
 
                     // Sent to +9593454135
-                    val transactionType = if (userData.userId == transactionData.senderId) { "Sent to ${transactionData.receiverPhone}" } else { "Received from ${transactionData.receiverPhone}" }
+                    val transactionType = if (userData.userId == transactionData.senderId) { "Sent to ${transactionData.receiverPhone}" } else { "Received from ${transactionData.senderPhone}" }
 
                     Text(text = transactionType, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary, modifier = Modifier.alignByBaseline())
                     Text(text = "${transactionData.amount} Points", fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)

@@ -18,12 +18,14 @@ class QRCodeActivity : ComponentActivity() {
     companion object {
         private const val EXTRA_QR_STRING = "Extra QR STRING"
         private const val EXTRA_USER_NAME = "Extra USER NAME"
+        private const val EXTRA_PHONE_NUMBER = "Extra PHONE NUMBER"
 
-        fun newIntent(context: Context, qrString: String, userName: String) : Intent {
+        fun newIntent(context: Context, qrString: String, userName: String, phoneNumber: String) : Intent {
 
             val intent = Intent(context, QRCodeActivity::class.java)
             intent.putExtra(EXTRA_QR_STRING, qrString)
             intent.putExtra(EXTRA_USER_NAME, userName)
+            intent.putExtra(EXTRA_PHONE_NUMBER, phoneNumber)
             return intent
         }
     }
@@ -33,6 +35,7 @@ class QRCodeActivity : ComponentActivity() {
 
         val qrString = intent.getStringExtra(EXTRA_QR_STRING) ?: ""
         val userName = intent.getStringExtra(EXTRA_USER_NAME) ?: ""
+        val phoneNumber = intent.getStringExtra(EXTRA_PHONE_NUMBER) ?: ""
 
         enableEdgeToEdge()
         setContent {
@@ -41,6 +44,7 @@ class QRCodeActivity : ComponentActivity() {
                     QRCodeScreen(
                         qrString = qrString,
                         userName = userName,
+                        phoneNumber = phoneNumber,
                         onClose = { finish() }
                     )
                 }
@@ -58,6 +62,7 @@ fun GreetingPreview() {
             QRCodeScreen(
                 qrString = "1234567890",
                 userName = "John Doe",
+                phoneNumber = "1234567890",
                 onClose = {  }
             )
         }

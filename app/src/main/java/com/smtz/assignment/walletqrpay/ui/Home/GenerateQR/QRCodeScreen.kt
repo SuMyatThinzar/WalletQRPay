@@ -21,10 +21,15 @@ import net.glxn.qrgen.android.QRCode
 fun QRCodeScreen(
     qrString: String,
     userName: String,
+    phoneNumber: String,
     onClose: () -> Unit
 ) {
     val qrBitmap by remember(qrString) {
-        mutableStateOf(QRCode.from(qrString).bitmap())
+        mutableStateOf(
+            QRCode.from(qrString)
+                .withSize(500, 500)  // generate 500x500 px bitmap
+                .bitmap()
+        )
     }
 
     Box(
@@ -43,10 +48,17 @@ fun QRCodeScreen(
                 userName,
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
-                fontSize = Dimens.TextHeading,
+                fontSize = Dimens.TextLarge,
                 fontWeight = FontWeight.SemiBold,
             )
-            Spacer(Modifier.height(24.dp))
+            Text(
+                phoneNumber,
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White,
+                fontSize = Dimens.TextRegular,
+                fontWeight = FontWeight.SemiBold,
+            )
+            Spacer(Modifier.height(Dimens.MarginxxLarge))
 
             // Show QR code image
             Image(
@@ -86,6 +98,7 @@ fun QRScreenPreview() {
             QRCodeScreen(
                 qrString = "1234567890",
                 userName = "John Doe",
+                phoneNumber = "1234567890",
                 onClose = {  }
             )
         }

@@ -6,6 +6,6 @@ data class UserData(
     val phone: String = "",
     val password: String = "",
     val points: Int = 0,
-    val fcmToken: String = "",
+//    val fcmToken: String = "",
     val transactions: List<TransactionData> = emptyList()
 )
