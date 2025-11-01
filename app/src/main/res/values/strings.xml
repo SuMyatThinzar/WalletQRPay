@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Wallet QRPay</string>
+    <string name="title_activity_auth_screen">AuthScreen</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_qrcode">QRCodeActivity</string>
+    <string name="title_activity_transfer">TransferActivity</string>
+</resources>

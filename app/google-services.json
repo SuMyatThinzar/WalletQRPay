@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "361399732219",
+    "project_id": "wallet-qrpay",
+    "storage_bucket": "wallet-qrpay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361399732219:android:8c5e1577deac670b91ad5e",
+        "android_client_info": {
+          "package_name": "com.smtz.assignment.walletqrpay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXNH0GgM9X5withtLOnri-P6HhJL3jaQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
