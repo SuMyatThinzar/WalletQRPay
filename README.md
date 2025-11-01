@@ -10,3 +10,19 @@ Wallet QRPay -
 	•	ZXing for scanning QR codes
 	•	Jetpack Compose for UI
 	•	MVVM architecture with ViewModels
+
+<img src="screenshots/Screenshot_20251102-033750.jpg" alt="Login Screen" width="250"/> 
+
+Log in and Sign up with Firebase Authentication and Firestore.
+
+<img src="screenshots/Screenshot_20251102-033726.jpg" alt="Home Screen" width="250"/> 
+
+New user will have 1000 points after account creation. Can also check the transaction records.
+
+<img src="screenshots/Screenshot_20251102-033734.jpg" alt="Transfer via QR or Phone number" width="250"/>
+
+Users can transfer desired points using QR code or using Phone number.
+
+<img src="screenshots/Screenshot_20251102-033739.jpg" alt="My QR Screen" width="250"/>
+
+<img src="screenshots/Screenshot_20251102-033747.jpg" alt="Edit Profile Detail" width="250"/>
