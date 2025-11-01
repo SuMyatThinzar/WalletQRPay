@@ -28,7 +28,7 @@ fun ScanScreen(
         }
     )
 
-    // Launch scanner when enter screen
+    // Launch scanner
     LaunchedEffect(Unit) {
         val options = ScanOptions().apply {
             setPrompt("Scan a QR code to Pay")

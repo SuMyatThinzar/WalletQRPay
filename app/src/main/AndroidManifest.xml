@@ -19,6 +19,11 @@
         android:theme="@style/Theme.WalletQRPay"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ProfileEdit.ProfileEditActivity"
+            android:exported="false"
+            android:label="@string/title_activity_profile_edit"
+            android:theme="@style/Theme.WalletQRPay" />
+        <activity
             android:name=".ui.Transfer.TransferActivity"
             android:exported="false"
             android:label="@string/title_activity_transfer"
@@ -47,17 +52,14 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="screenOrientation" />
-
-            <!-- FCM Service -->
-            <service
-                android:name=".notification.FirebaseService"
-                android:exported="false">
-                <intent-filter>
-                    <action android:name="com.google.firebase.MESSAGING_EVENT" />
-                </intent-filter>
-            </service>
-
+            tools:replace="screenOrientation" /> <!-- FCM Service -->
+        <service
+            android:name=".notification.FirebaseService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

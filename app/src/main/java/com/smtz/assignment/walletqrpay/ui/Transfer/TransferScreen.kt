@@ -4,7 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.smtz.assignment.walletqrpay.data.model.UserData
 import com.smtz.assignment.walletqrpay.data.repository.TransferRepository
 import com.smtz.assignment.walletqrpay.ui.Loading.LoadingScreen
 import com.smtz.assignment.walletqrpay.ui.theme.Dimens
@@ -50,6 +50,7 @@ fun TransferScreen(
                 title = {
                     Text(
                         text = "Transfer Points",
+                        fontSize = Dimens.TextLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
@@ -75,12 +76,11 @@ fun TransferScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(16.dp)
+                    .padding(start = Dimens.MarginLarge, end = Dimens.MarginLarge, top = Dimens.MarginLarge, bottom = Dimens.MarginxxLarge)
             ) {
                 Button(
                     onClick = {
                         if (transferViewModel.validatePhone()) {
-
                             senderData?.let {
                                 if (isPhoneNumberTransfer) {
                                     transferViewModel.fetchReceiverInfoUsingPhoneNumberAndMakeTransaction(amount = transferViewModel.transferAmount.value.toIntOrNull() ?: 0)
@@ -111,9 +111,9 @@ fun TransferScreen(
         ) {
             // Total Balance Section
             Column {
-                Text(text = "Total Balance", fontSize = Dimens.TextMedium, fontWeight = FontWeight.Normal, color = Color.White)
+                Text(text = "Total Balance", fontWeight = FontWeight.Normal, color = Color.White)
                 Spacer(modifier = Modifier.height(Dimens.MarginMedium))
-                Text(text = "${senderData?.points ?: 0} points", fontSize = Dimens.TextMedium, fontWeight = FontWeight.Medium, color = Color.White)
+                Text(text = "${senderData?.points ?: 0} points", fontWeight = FontWeight.Bold, color = Color.White)
             }
 
             Divider(color = Color.Gray.copy(alpha = 0.2f))
@@ -124,45 +124,7 @@ fun TransferScreen(
             Divider(color = Color.Gray.copy(alpha = 0.2f))
 
             // Enter Amount
-            Column {
-                Text(text = "Enter amount to transfer", fontSize = Dimens.TextRegular, fontWeight = FontWeight.Normal, color = Color.White)
-
-                OutlinedTextField(
-                    value = transferAmount,
-                    onValueChange = { inputValue ->
-
-                        val availablePoints = senderData?.points ?: 0
-                        val amount = inputValue.toIntOrNull() ?: 0
-
-                        if (amount <= availablePoints) {
-                            transferViewModel.transferAmount.value = inputValue
-                        } else {
-                            transferViewModel.transferAmount.value = availablePoints.toString()
-                        }
-                    },
-                    
-                    label = { Text("Amount (in points)") },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color.White,
-                        unfocusedBorderColor = Color.White,
-                        cursorColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.White
-                    )
-                )
-
-                Text(
-                    text = "Available: ${senderData?.points ?: 0} points",
-                    fontSize = 14.sp,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
+            EnterAmountSection(transferAmount, senderData, transferViewModel)
 
             Spacer(modifier = Modifier.height(100.dp))
         }
@@ -182,7 +144,6 @@ fun TransferScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReceiverPhoneNumberSection(transferViewModel: TransferViewModel, isPhoneNumberTransfer: Boolean, receiverPhone: String) {
     Column {
@@ -196,23 +157,18 @@ fun ReceiverPhoneNumberSection(transferViewModel: TransferViewModel, isPhoneNumb
         Spacer(modifier = Modifier.height(Dimens.MarginSmall))
 
         if (isPhoneNumberTransfer) {
-            OutlinedTextField(
+
+            OutlinedTextFieldSection(
+                label = "Enter receiver phone number",
                 value = transferViewModel.receiverPhoneNumber.value,
-                onValueChange = { transferViewModel.receiverPhoneNumber.value = it },
-                label = { Text("Enter receiver phone number") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.White,
-                    unfocusedBorderColor = Color.White,
-                    cursorColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White
-                )
+                onValueChange = { inputValue ->
+                    // allow only numbers and plus sign
+                    val filtered = inputValue.filter { it.isDigit() || it == '+' }
+                    transferViewModel.receiverPhoneNumber.value = filtered
+                },
+                keyboardType = KeyboardType.Phone
             )
+
         } else {    // through QR Scan (receiverData is already fetched at first)
             Text(
                 text = receiverPhone,
@@ -223,6 +179,40 @@ fun ReceiverPhoneNumberSection(transferViewModel: TransferViewModel, isPhoneNumb
         }
     }
 
+}
+
+@Composable
+fun EnterAmountSection(transferAmount: String, senderData: UserData?, transferViewModel: TransferViewModel) {
+    Column {
+        Text(text = "Enter amount to transfer", fontSize = Dimens.TextRegular, fontWeight = FontWeight.Normal, color = Color.White)
+
+        OutlinedTextFieldSection(
+            label = "Amount (in points)",
+            value = transferAmount,
+            onValueChange = { inputValue ->
+
+                val filtered = inputValue.filter { it.isDigit() }  // to filter "," , "." , etc
+
+                val availablePoints = senderData?.points ?: 0
+                val amount = filtered.toIntOrNull() ?: 0
+
+                if (amount <= availablePoints) {
+                    transferViewModel.transferAmount.value = filtered
+                } else {
+                    transferViewModel.transferAmount.value = availablePoints.toString()
+                }
+            },
+            keyboardType = KeyboardType.Number
+        )
+
+
+        Text(
+            text = "Available: ${senderData?.points ?: 0} points",
+            fontSize = 14.sp,
+            color = Color.Gray,
+            modifier = Modifier.padding(top = 4.dp)
+        )
+    }
 }
 
 

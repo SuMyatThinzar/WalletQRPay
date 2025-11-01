@@ -48,19 +48,19 @@ val AppTypographyPoppins = Typography(
     bodyLarge = TextStyle(
         fontFamily = Poppins,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         lineHeight = 22.sp,
         letterSpacing = 0.5.sp
     ),
     titleLarge = TextStyle(
         fontFamily = Poppins,
         fontWeight = FontWeight.SemiBold,
-        fontSize = 22.sp
+        fontSize = 20.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Poppins,
         fontWeight = FontWeight.Medium,
-        fontSize = 12.sp
+        fontSize = 10.sp
     )
     // You can define more text styles if needed
 )

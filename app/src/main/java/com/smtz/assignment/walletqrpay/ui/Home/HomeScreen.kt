@@ -1,5 +1,6 @@
 package com.smtz.assignment.walletqrpay.ui.Home
 
+import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -21,7 +22,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.smtz.assignment.walletqrpay.R
+import com.google.gson.Gson
 import com.smtz.assignment.walletqrpay.R.drawable.*
 import com.smtz.assignment.walletqrpay.data.model.TransactionData
 import com.smtz.assignment.walletqrpay.data.model.UserData
@@ -29,6 +30,7 @@ import com.smtz.assignment.walletqrpay.data.repository.HomeRepository
 import com.smtz.assignment.walletqrpay.ui.Home.GenerateQR.QRCodeActivity
 import com.smtz.assignment.walletqrpay.ui.Home.ScanQR.ScanScreen
 import com.smtz.assignment.walletqrpay.ui.Loading.LoadingScreen
+import com.smtz.assignment.walletqrpay.ui.ProfileEdit.ProfileEditActivity
 import com.smtz.assignment.walletqrpay.ui.Transfer.TransferActivity
 import com.smtz.assignment.walletqrpay.ui.theme.*
 import com.smtz.assignment.walletqrpay.ui.theme.WalletQRPayTheme
@@ -61,7 +63,7 @@ fun HomeScreen() {
                 contentPadding = PaddingValues(bottom = 32.dp)
             ) {
                 item {
-                    HeaderWithBalanceSection(userData)
+                    HeaderWithBalanceSection(context, userData)
                 }
 
                 item {
@@ -127,7 +129,7 @@ fun HomeScreen() {
 
 
 @Composable
-fun HeaderWithBalanceSection(userData: UserData?) {
+fun HeaderWithBalanceSection(context: Context, userData: UserData?) {
     // Both Header and Card height is 270.dp. Header only take 220.dp. Card clips to bottom with height 100.dp. 270 - 220 = 50dp is overlay.
     Box(
         modifier = Modifier
@@ -165,7 +167,14 @@ fun HeaderWithBalanceSection(userData: UserData?) {
                 // Circle Avatar + Name & Phone
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.height(50.dp) // same height for circle & text
+                    modifier = Modifier
+                        .height(50.dp)
+                        .clickable {
+                            // Convert to JSON string
+                            val userJsonString = Gson().toJson(userData)
+                            val intent = ProfileEditActivity.newIntent(context, userJsonString ?: "")
+                            context.startActivity(intent)
+                        }
                 ) {
                     // Dummy Profile icon
                     Image(

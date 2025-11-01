@@ -28,7 +28,6 @@ class FirebaseService : FirebaseMessagingService() {
         super.onNewToken(token)
         Log.d("FirebaseService", "New FCM token: $token")
 
-        // Optionally update the token in Firestore if user is logged in
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
             FirebaseFirestore.getInstance()

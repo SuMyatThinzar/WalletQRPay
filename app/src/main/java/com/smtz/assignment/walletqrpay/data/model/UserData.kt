@@ -2,7 +2,7 @@ package com.smtz.assignment.walletqrpay.data.model
 
 data class UserData(
     val userId: String = "",
-    val userName: String = "",
+    var userName: String = "",
     val phone: String = "",
     val password: String = "",
     val points: Int = 0,

@@ -17,7 +17,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TransferViewModel(
-
     private val transferRepository: TransferRepository,
     private val userPreferences: UserPreferences,
     private val receiverId: String = "",
@@ -115,7 +114,8 @@ class TransferViewModel(
 
     fun makeTransaction(amount: Int) {
         if (amount <= 0) {
-            errorMessage.value = "Transfer amount must be greater than 0."
+            errorMessage.value = "Transfer amount must be greater than 0"
+            isLoading.value = false
             return
         }
 

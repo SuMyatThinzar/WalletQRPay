@@ -88,7 +88,7 @@ class TransferRepository(
                 transactionType = "transfer"
             )
 
-            //  Update points for both users
+            //  update points for both users
             transaction.update(senderRef, "points", senderPoints - amount)
             transaction.update(receiverRef, "points", receiverPoints + amount)
 

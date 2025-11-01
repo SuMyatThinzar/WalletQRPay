@@ -1,5 +1,7 @@
 package com.smtz.assignment.walletqrpay.data.repository
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.smtz.assignment.walletqrpay.data.model.UserData
 
@@ -7,6 +9,7 @@ class AuthRepository(
     firebaseFirestoreDB: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
     private val usersCollection = firebaseFirestoreDB.collection("users")
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     fun login(
         phone: String,
@@ -40,6 +43,42 @@ class AuthRepository(
         onSuccess: (String) -> Unit,
         onFailure: (String) -> Unit
     ) {
+        firebaseAuth.createUserWithEmailAndPassword("$phone@gmail.com", password)
+            .addOnSuccessListener { authResult ->
+                val userId = authResult.user?.uid ?: ""
+
+                // save user data in Firestore
+                val newUserData = UserData(
+                    userId = userId,
+                    userName = userName,
+                    phone = phone,
+                    password = password,
+                    points = 1000,
+                    transactions = emptyList()
+                )
+                usersCollection.document(userId)
+                    .set(newUserData)
+                    .addOnSuccessListener { onSuccess(userId) }
+                    .addOnFailureListener { e -> onFailure(e.message ?: "Signup failed") }
+
+            }
+            .addOnFailureListener { e ->
+                if (e is FirebaseAuthUserCollisionException) {
+                    onFailure("User already exists, please login")
+                } else {
+                    onFailure(e.message ?: "Signup failed")
+                }
+            }
+
+    }
+
+    fun signUpWithoutFirebaseAuth(
+        userName: String,
+        phone: String,
+        password: String,
+        onSuccess: (String) -> Unit,
+        onFailure: (String) -> Unit
+    ) {
         usersCollection.whereEqualTo("phone", phone).get()
             .addOnSuccessListener { query ->
                 if (!query.isEmpty) {
@@ -48,7 +87,6 @@ class AuthRepository(
                 }
 
                 val newDocRef = usersCollection.document() // generates an ID, but doesn't write yet
-
 
                 val newUserData = UserData(
                     userId = newDocRef.id,
